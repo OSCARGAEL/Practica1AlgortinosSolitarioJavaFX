@@ -29,6 +29,7 @@ public class AnimacionArrastre {
     private Point2D delta;
     private final Pane capaFlotante;
     private List<Double> offsetYOverlay;
+    private StackPane placeholderOrigen;
     
 
     // inicializa los recursos necesarios para arrastrar cartas
@@ -160,6 +161,10 @@ public class AnimacionArrastre {
         for (StackPane n : grupo) {
             origen.getChildren().remove(n);
         }
+        if (origen == descarte) {
+             placeholderOrigen = crearPlaceholderDeCartaVolteada();
+             origen.getChildren().add(placeholderOrigen);
+        }
 
         for (int i = 0; i < grupo.size(); i++) {
             StackPane n = grupo.get(i);
@@ -175,6 +180,10 @@ public class AnimacionArrastre {
 
     // regresa la carta a su posicion original
     private void regresarCartaAPosicionOriginal() {
+        if (placeholderOrigen != null) {
+              origen.getChildren().remove(placeholderOrigen);
+              placeholderOrigen = null;
+        }
         for (int i = 0; i < grupo.size(); i++) {
             StackPane n = grupo.get(i);
             capaFlotante.getChildren().remove(n);
@@ -191,6 +200,10 @@ public class AnimacionArrastre {
         for (StackPane n : new ArrayList<>(grupo)) {
             capaFlotante.getChildren().remove(n);
         }
+        if (placeholderOrigen != null && origen != null) {
+        origen.getChildren().remove(placeholderOrigen);
+        placeholderOrigen = null;
+       }
     }
 
     // encuentra el destino segun coordenadas en pantalla
@@ -209,5 +222,25 @@ public class AnimacionArrastre {
             }
         }
         return null;
+    }
+    private StackPane crearPlaceholderDeCartaVolteada() {
+    StackPane ph = new StackPane();
+    ph.setPrefSize(100, 140);
+
+    javafx.scene.image.Image img = CargadorCarta.cargarImagenDeCartaPorNombre("back.png");
+    if (img != null) {
+        javafx.scene.image.ImageView v = new javafx.scene.image.ImageView(img);
+        v.setFitWidth(100);
+        v.setPreserveRatio(true);
+        ph.getChildren().add(v);
+    } else {
+        javafx.scene.shape.Rectangle r = new javafx.scene.shape.Rectangle(100, 140);
+        r.setArcWidth(14);
+        r.setArcHeight(14);
+        r.setFill(javafx.scene.paint.Color.web("#2b5aa7"));
+        ph.getChildren().add(r);
+    }
+
+    return ph;
     }
 }
