@@ -10,6 +10,8 @@ public class RecursosAudioMedia {
 
     private static MediaPlayer musica;
     private static final List<MediaPlayer> activos = new ArrayList<>();
+    private static boolean muteado = false;
+    private static double volumenAnterior = 1.0;
 
     // crea el fondo animado para la interfaz
     public static ImageView crearFondoAnimadoInterfaz() {
@@ -32,6 +34,11 @@ public class RecursosAudioMedia {
 
         musica = new MediaPlayer(m);
         musica.setCycleCount(MediaPlayer.INDEFINITE);
+        if (muteado) {
+            musica.setVolume(0.0);
+        } else {
+            musica.setVolume(1.0);
+        }
         musica.play();
     }
 
@@ -98,5 +105,21 @@ public class RecursosAudioMedia {
         }
 
         return null;
+    }
+    public static void alternarMuteDeMusica() {
+    muteado = !muteado;
+
+    if (musica != null) {
+        if (muteado) {
+            volumenAnterior = musica.getVolume();
+            musica.setVolume(0.0);
+        } else {
+            musica.setVolume(volumenAnterior <= 0 ? 1.0 : volumenAnterior);
+        }
+    }
+    }
+
+    public static boolean estaMuteadaLaMusica() {
+        return muteado;
     }
 }

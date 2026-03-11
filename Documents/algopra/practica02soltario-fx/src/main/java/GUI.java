@@ -27,16 +27,27 @@ public class GUI extends Application {
     private Pane capaArrastre;
     private Label lblMov = new Label("Movimientos: 0");
     private Timeline cron;
+    
 
     // inicia la aplicacion grafica del juego
     @Override
     public void start(Stage v) {
         Button botonNuevo = new Button("Nuevo juego");
         Button botonDeshacer = new Button("Deshacer");
+        Button botonMute = new Button("Mutear musica");
 
-        HBox barra = new HBox(16, botonNuevo, botonDeshacer, lblMov);
+        HBox barra = new HBox(16, botonNuevo, botonDeshacer, botonMute, lblMov);
         barra.setAlignment(Pos.CENTER);
         barra.setPadding(new Insets(10, 10, 10, 10));
+        botonMute.setOnAction(e -> {
+            RecursosAudioMedia.alternarMuteDeMusica();
+            if (RecursosAudioMedia.estaMuteadaLaMusica()) {
+                botonMute.setText("Activar musica");
+            } else {
+                botonMute.setText("Mutear musica");
+            }
+        });
+        
 
         capaArrastre = new Pane();
         capaArrastre.setPickOnBounds(false);
